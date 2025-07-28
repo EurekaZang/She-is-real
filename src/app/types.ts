@@ -4,8 +4,8 @@ export interface Persona {
   id: number;
   name: string;
   description: string;
-  avatar_url: string; // 本地图片路径
   system_prompt?: string; // 前端暂时用不到，但定义好
+  avatar: string;
 }
 
 export interface ChatMessage {

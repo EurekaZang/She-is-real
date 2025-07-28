@@ -17,27 +17,34 @@ export function PersonaSelector({ personas, selectedPersona, onSelectPersona }: 
           <button
             key={persona.id}
             onClick={() => onSelectPersona(persona)}
-            className={`w-full text-left p-3 rounded-xl backdrop-blur-md transition-all duration-300 
+            className={`w-full text-left p-3 rounded-xl backdrop-blur-md transition-all duration-300 flex items-center gap-3
               ${selectedPersona?.id === persona.id
                 ? 'bg-white/30 shadow-lg border border-white/50'
                 : 'hover:bg-white/20 bg-white/10 border border-white/10'
               }
               hover:shadow-md hover:scale-[1.02]`}
           >
-            <p className={`font-medium ${
-              selectedPersona?.id === persona.id 
-                ? 'text-white' 
-                : 'text-gray-100'
-            }`}>
-              {persona.name}
-            </p>
-            <p className={`text-sm ${
-              selectedPersona?.id === persona.id 
-                ? 'text-white/80' 
-                : 'text-gray-300'
-            }`}>
-              {persona.description}
-            </p>
+            <img 
+              src={persona.avatar} 
+              alt={persona.name}
+              className="w-12 h-12 rounded-full object-cover"
+            />
+            <div>
+              <p className={`font-medium ${
+                selectedPersona?.id === persona.id 
+                  ? 'text-white' 
+                  : 'text-gray-100'
+              }`}>
+                {persona.name}
+              </p>
+              <p className={`text-sm ${
+                selectedPersona?.id === persona.id 
+                  ? 'text-white/80' 
+                  : 'text-gray-300'
+              }`}>
+                {persona.description}
+              </p>
+            </div>
           </button>
         ))}
       </div>
