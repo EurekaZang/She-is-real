@@ -54,7 +54,7 @@ export default function HomePage() {
 
       const aiResponse: ChatMessage = await response.json();
 
-      // 3. 将AI的回复添加到消息列表
+      
       setMessages(prevMessages => [...prevMessages, aiResponse]);
 
     } catch (error) {
@@ -62,7 +62,7 @@ export default function HomePage() {
       const errorMessage: ChatMessage = { role: 'assistant', content: '抱歉，我好像出了一点问题...' };
       setMessages(prevMessages => [...prevMessages, errorMessage]);
     } finally {
-      // 4. 无论成功失败，都结束加载状态
+      
       setIsLoading(false);
     }
   };
