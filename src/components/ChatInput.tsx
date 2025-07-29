@@ -17,20 +17,33 @@ export function ChatInput({ onSendMessage, isLoading }: ChatInputProps) {
   };
 
   return (
-    <div className="p-4 bg-gray-100 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
-      <form onSubmit={handleSubmit} className="flex items-center gap-4">
+    <div className="p-4 backdrop-blur-md bg-white/10 border-t border-white/20">
+      <form onSubmit={handleSubmit} className="flex items-center gap-4 max-w-4xl mx-auto">
         <input
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="和你的AI伙伴聊点什么..."
           disabled={isLoading}
-          className="flex-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+          className="flex-1 p-3 rounded-xl 
+            bg-white/10 backdrop-blur-md
+            border border-white/20
+            text-white placeholder-white/50
+            transition-all duration-300
+            hover:scale-[1.02] hover:bg-white/20
+            focus:outline-none focus:ring-2 focus:ring-white/30 focus:bg-white/20
+            disabled:opacity-50 disabled:cursor-not-allowed"
         />
         <button
           type="submit"
           disabled={isLoading || !input.trim()}
-          className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 disabled:bg-blue-300 disabled:cursor-not-allowed"
+          className="px-6 py-3 rounded-xl
+            bg-white/20 backdrop-blur-md
+            border border-white/20
+            text-white font-medium
+            transition-all duration-300
+            hover:scale-[1.02] hover:bg-white/30
+            disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isLoading ? '思考中...' : '发送'}
         </button>

@@ -24,9 +24,8 @@ const MOCK_PERSONAS: Persona[] = [
   }
 ];
 
-// Next.js API Route 的标准写法
+// Next.js API Route
 export async function GET() {
-  // 模拟真实世界的网络延迟，让加载状态更明显
   await new Promise(resolve => setTimeout(resolve, 500)); 
 
   return NextResponse.json(MOCK_PERSONAS);
