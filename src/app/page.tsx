@@ -5,6 +5,7 @@ import { PersonaSelector } from '@/components/PersonaSelector';
 import { ChatWindow } from '@/components/ChatWindow';
 import { ChatInput } from '@/components/ChatInput';
 import { Persona, ChatMessage } from '@/app/types';
+import Link from 'next/link';
 
 export default function HomePage() {
   // --- 状态管理 ---
@@ -90,12 +91,44 @@ export default function HomePage() {
       {/* 主界面内容 */}
       <div className="relative flex h-screen">
         {/* PersonaSelector with glass effect */}
-        <div className="w-1/4 min-w-[280px] backdrop-blur-xl bg-white/5 border-r border-white/10">
+        <div className="w-1/4 min-w-[280px] backdrop-blur-xl bg-white/5 border-r border-white/10 relative">
           <PersonaSelector
             personas={personas}
             selectedPersona={selectedPersona}
             onSelectPersona={handleSelectPersona}
           />
+          
+          {/* Dashboard 按钮 */}
+          <Link 
+            href="/dashboard"
+            className="absolute bottom-4 left-4 px-4 py-3 
+              backdrop-blur-md rounded-xl
+              bg-white/5 border border-white/10
+              transition-all duration-300 group
+              hover:bg-white/10 hover:scale-105
+              hover:shadow-[0_0_20px_rgba(168,85,247,0.3)]"
+          >
+            <div className="flex items-center gap-2">
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                className="h-5 w-5 text-purple-400 transition-transform group-hover:scale-110" 
+                fill="none" 
+                viewBox="0 0 24 24" 
+                stroke="currentColor"
+              >
+                <path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  strokeWidth={2} 
+                  d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" 
+                />
+              </svg>
+              <span className="text-sm font-medium bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent">
+                进入控制台
+              </span>
+              <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-purple-600/20 to-pink-600/20 opacity-0 group-hover:opacity-100 transition-opacity blur"></div>
+            </div>
+          </Link>
         </div>
 
         {/* Chat area with glass effect */}

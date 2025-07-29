@@ -28,7 +28,7 @@ export default function SignInPage() {
 
       <div className="max-w-md w-full space-y-8 p-8 relative">
         {/* 玻璃拟态卡片效果 */}
-        <div className="absolute inset-0 -bottom-4 bg-white/5 backdrop-blur-xl rounded-2x1 border border-white/10 shadow-2xl"></div>
+        <div className="absolute inset-0 -bottom-7 bg-white/5 backdrop-blur-xl rounded-2x1 border border-white/10 shadow-2xl"></div>
         
         <div className="relative space-y-8">
           <div className="text-center">

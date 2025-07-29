@@ -19,9 +19,9 @@ function ChatListSkeleton() {
   return (
     <div className="space-y-4 animate-pulse">
       {[...Array(3)].map((_, i) => (
-        <div key={i} className="p-4 bg-gray-200 dark:bg-gray-700 rounded-lg">
-          <div className="h-5 bg-gray-300 dark:bg-gray-600 rounded w-3/4 mb-2"></div>
-          <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded w-1/2"></div>
+        <div key={i} className="p-4 bg-white/5 backdrop-blur-md rounded-lg border border-white/10">
+          <div className="h-5 bg-white/10 rounded w-3/4 mb-2"></div>
+          <div className="h-4 bg-white/10 rounded w-1/2"></div>
         </div>
       ))}
     </div>
@@ -59,51 +59,79 @@ export default function DashboardPage() {
   // 优雅地处理加载和未认证状态
   if (status === 'loading' || !session) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <p>正在加载您的信息...</p>
+      <div className="flex items-center justify-center h-screen bg-black">
+        <p className="text-white/60">正在加载您的信息...</p>
       </div>
     );
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-8">
-      <header className="mb-8">
-        <h1 className="text-4xl font-bold text-gray-800 dark:text-gray-100">
-          欢迎回来, {session.user?.name || '朋友'}!
-        </h1>
-        <p className="text-lg text-gray-500 dark:text-gray-400 mt-2">
-          选择一个最近的对话继续，或开始一段新旅程。
-        </p>
-      </header>
+    <div className="min-h-screen bg-black relative overflow-hidden">
+      {/* 霓虹灯效果 */}
+      <div className="fixed inset-0 pointer-events-none">
+        {/* 主光源 */}
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-600/30 rounded-full blur-[128px] animate-pulse"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-600/30 rounded-full blur-[128px] animate-pulse animation-delay-1000"></div>
+        
+        {/* 装饰光源 */}
+        <div className="absolute top-1/2 left-1/2 w-72 h-72 bg-violet-500/20 rounded-full blur-[96px] animate-pulse animation-delay-2000"></div>
+        <div className="absolute bottom-1/3 right-1/3 w-64 h-64 bg-indigo-500/20 rounded-full blur-[96px] animate-pulse animation-delay-3000"></div>
+      </div>
 
-      <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-semibold">最近对话</h2>
-          {/* 你可以修改这里的链接到你的主聊天页面 */}
-          <Link href="/chat">
-            <button className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition-colors">
-              + 开始新聊天
-            </button>
-          </Link>
-        </div>
+      {/* 主要内容 */}
+      <div className="relative min-h-screen">
+        <div className="max-w-4xl mx-auto p-8">
+          <header className="mb-8">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent">
+              欢迎回来, {session.user?.name || '朋友'}!
+            </h1>
+            <p className="text-gray-400 mt-2 text-lg">
+              选择一个最近的对话继续，或开始一段新旅程。
+            </p>
+          </header>
 
-        {isLoading ? (
-          <ChatListSkeleton />
-        ) : (
-          <div className="space-y-4">
-            {chats.map(chat => (
-              <Link key={chat.id} href={`/chat/${chat.id}`}>
-                <div className="block p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 cursor-pointer">
-                  <h3 className="font-bold text-lg text-blue-600 dark:text-blue-400">{chat.title}</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-300">与 {chat.persona_name} 的对话</p>
-                  <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">
-                    最后更新于: {new Date(chat.last_updated).toLocaleString()}
-                  </p>
+          <div className="backdrop-blur-xl bg-white/5 p-6 rounded-xl border border-white/10 shadow-lg relative overflow-hidden">
+            {/* 卡片内部装饰光效 */}
+            <div className="absolute inset-0 pointer-events-none">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 rounded-full blur-[32px]"></div>
+              <div className="absolute bottom-0 left-0 w-32 h-32 bg-blue-500/10 rounded-full blur-[32px]"></div>
+            </div>
+
+            <div className="relative">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-semibold text-white">最近对话</h2>
+                <Link href="/">
+                  <button className="px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold rounded-lg
+                    transition-all duration-300 hover:shadow-[0_0_20px_rgba(168,85,247,0.5)] hover:scale-[1.02]">
+                    + 开始新聊天
+                  </button>
+                </Link>
+              </div>
+
+              {isLoading ? (
+                <ChatListSkeleton />
+              ) : (
+                <div className="space-y-4">
+                  {chats.map(chat => (
+                    <Link key={chat.id} href={`/chat/${chat.id}`}>
+                      <div className="block p-4 backdrop-blur-md bg-white/5 border border-white/10 rounded-lg
+                        hover:bg-white/10 transition-all duration-300 cursor-pointer
+                        hover:shadow-[0_0_15px_rgba(168,85,247,0.2)] hover:scale-[1.01]">
+                        <h3 className="font-bold text-lg text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
+                          {chat.title}
+                        </h3>
+                        <p className="text-sm text-gray-300">与 {chat.persona_name} 的对话</p>
+                        <p className="text-xs text-gray-500 mt-2">
+                          最后更新于: {new Date(chat.last_updated).toLocaleString()}
+                        </p>
+                      </div>
+                    </Link>
+                  ))}
                 </div>
-              </Link>
-            ))}
+              )}
+            </div>
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
