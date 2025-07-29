@@ -75,26 +75,51 @@ export default function HomePage() {
 
   // --- 渲染UI ---
   return (
-    <div className="flex h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-      <PersonaSelector
-        personas={personas}
-        selectedPersona={selectedPersona}
-        onSelectPersona={handleSelectPersona}
-      />
-      <div className="flex-1 flex flex-col">
-        {selectedPersona ? (
-          <>
-            <header className="p-4 border-b border-gray-200 dark:border-gray-700">
-              <h1 className="text-xl font-bold">{selectedPersona.name}</h1>
-            </header>
-            <ChatWindow messages={messages} isLoading={isLoading} />
-            <ChatInput onSendMessage={handleSendMessage} isLoading={isLoading} />
-          </>
-        ) : (
-          <div className="flex-1 flex items-center justify-center">
-            <p>请从左侧选择一个聊天伙伴开始对话</p>
-          </div>
-        )}
+    <div className="relative min-h-screen bg-black overflow-hidden">
+      {/* 霓虹灯效果 */}
+      <div className="fixed inset-0 pointer-events-none">
+        {/* 主光源 */}
+        <div className="absolute top-1/3 left-1/4 w-96 h-96 bg-purple-600/30 rounded-full blur-[128px] animate-pulse"></div>
+        <div className="absolute bottom-1/3 right-1/4 w-96 h-96 bg-blue-600/30 rounded-full blur-[128px] animate-pulse animation-delay-1000"></div>
+        
+        {/* 装饰光源 */}
+        <div className="absolute top-1/2 left-1/2 w-72 h-72 bg-violet-500/20 rounded-full blur-[96px] animate-pulse animation-delay-2000"></div>
+        <div className="absolute bottom-1/4 right-1/3 w-64 h-64 bg-indigo-500/20 rounded-full blur-[96px] animate-pulse animation-delay-3000"></div>
+      </div>
+
+      {/* 主界面内容 */}
+      <div className="relative flex h-screen">
+        {/* PersonaSelector with glass effect */}
+        <div className="w-1/4 min-w-[280px] backdrop-blur-xl bg-white/5 border-r border-white/10">
+          <PersonaSelector
+            personas={personas}
+            selectedPersona={selectedPersona}
+            onSelectPersona={handleSelectPersona}
+          />
+        </div>
+
+        {/* Chat area with glass effect */}
+        <div className="flex-1 flex flex-col bg-black/30 backdrop-blur-xl">
+          {selectedPersona ? (
+            <>
+              <header className="p-4 border-b border-white/10 backdrop-blur-md bg-white/5">
+                <h1 className="text-xl font-bold text-white">
+                  与 {selectedPersona.name} 对话
+                </h1>
+              </header>
+              <div className="flex-1 flex flex-col">
+                <ChatWindow messages={messages} isLoading={isLoading} />
+                <div className="border-t border-white/10">
+                  <ChatInput onSendMessage={handleSendMessage} isLoading={isLoading} />
+                </div>
+              </div>
+            </>
+          ) : (
+            <div className="flex-1 flex items-center justify-center text-white/60">
+              <p>请从左侧选择一个聊天伙伴开始对话</p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

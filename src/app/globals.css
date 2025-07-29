@@ -1,22 +1,35 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* 添加动画延迟工具类 */
+@layer utilities {
+  .animation-delay-1000 {
+    animation-delay: 1s;
   }
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+  .animation-delay-3000 {
+    animation-delay: 3s;
+  }
+
+  .glow-effect {
+    box-shadow: 0 0 15px theme('colors.purple.500/20');
+    transition: box-shadow 0.3s ease-in-out;
+  }
+
+  .glow-effect:hover {
+    box-shadow: 0 0 30px theme('colors.purple.500/40');
+  }
+}
+
+/* 已有的样式保持不变 */
+:root {
+  --background: #000000;
+  --foreground: #ffffff;
 }
 
 body {
