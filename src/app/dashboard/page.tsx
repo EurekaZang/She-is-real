@@ -14,6 +14,13 @@ interface ChatSummary {
   last_updated: string;
 }
 
+// 定义用户会员等级类型
+interface MembershipInfo {
+  type: '普通会员' | '高阶会员' | '尊贵会员';
+  color: string;
+  expiryDate?: string;
+}
+
 // 一个简单的骨架屏组件，用于加载状态
 function ChatListSkeleton() {
   return (
@@ -56,6 +63,13 @@ export default function DashboardPage() {
     }
   }, [status]);
 
+  // 模拟会员信息 (实际应用中应该从API获取)
+  const membershipInfo: MembershipInfo = {
+    type: '尊贵会员',
+    color: 'from-purple-500 to-pink-500',
+    expiryDate: '2025-12-31'
+  };
+
   // 优雅地处理加载和未认证状态
   if (status === 'loading' || !session) {
     return (
@@ -81,13 +95,69 @@ export default function DashboardPage() {
       {/* 主要内容 */}
       <div className="relative min-h-screen">
         <div className="max-w-4xl mx-auto p-8">
+          {/* 添加账户信息卡片 */}
+          <div className="backdrop-blur-xl bg-white/5 p-6 rounded-xl border border-white/10 shadow-lg relative overflow-hidden mb-8">
+            <div className="absolute inset-0 pointer-events-none">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-purple-600/20 rounded-full blur-[96px] animate-pulse"></div>
+              <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-600/20 rounded-full blur-[96px] animate-pulse animation-delay-2000"></div>
+            </div>
+
+            <div className="relative flex items-start justify-between">
+              <div>
+                <h2 className="text-2xl font-bold text-white mb-4">账户信息</h2>
+                <div className="space-y-2">
+                  <p className="text-gray-300">
+                    <span className="text-gray-400">邮箱：</span>
+                    {session.user?.email}
+                  </p>
+                  <p className="text-gray-300">
+                    <span className="text-gray-400">用户名：</span>
+                    {session.user?.name}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex flex-col items-end">
+                <div className="mb-2">
+                  <span className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-gradient-to-r ${membershipInfo.color} text-white shadow-lg`}>
+                    {membershipInfo.type}
+                  </span>
+                </div>
+                {membershipInfo.expiryDate && (
+                  <p className="text-sm text-gray-400">
+                    有效期至：{new Date(membershipInfo.expiryDate).toLocaleDateString()}
+                  </p>
+                )}
+                <Link 
+                  href="/pricing" 
+                  className="mt-4 text-sm text-purple-400 hover:text-purple-300 transition-colors duration-300 group flex items-center gap-1"
+                >
+                  查看会员权益
+                  <svg 
+                    xmlns="http://www.w3.org/2000/svg" 
+                    className="h-4 w-4 transition-transform group-hover:translate-x-1" 
+                    fill="none" 
+                    viewBox="0 0 24 24" 
+                    stroke="currentColor"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* 欢迎标题部分也稍作修改 */}
           <header className="mb-8">
             <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent">
               欢迎回来, {session.user?.name || '朋友'}!
             </h1>
-            <p className="text-gray-400 mt-2 text-lg">
-              选择一个最近的对话继续，或开始一段新旅程。
-            </p>
+            <div className="flex items-center gap-2 mt-2">
+              <p className="text-gray-400 text-lg">
+                选择一个最近的对话继续，或开始一段新旅程。
+              </p>
+              <span className="inline-block w-2 h-2 bg-purple-500 rounded-full animate-pulse"></span>
+            </div>
           </header>
 
           <div className="backdrop-blur-xl bg-white/5 p-6 rounded-xl border border-white/10 shadow-lg relative overflow-hidden">

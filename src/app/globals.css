@@ -97,3 +97,124 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@layer utilities {
+  /* 强化霓虹流动动画 */
+  @keyframes neonFlow {
+    0% {
+      background-position: 0% 50%;
+      opacity: 0.4;
+      box-shadow: 
+        0 0 20px rgba(168, 85, 247, 0.3),
+        0 0 40px rgba(168, 85, 247, 0.2);
+    }
+    50% {
+      background-position: 100% 50%;
+      opacity: 0.8;
+      box-shadow: 
+        0 0 30px rgba(168, 85, 247, 0.8),
+        0 0 60px rgba(168, 85, 247, 0.6);
+    }
+    100% {
+      background-position: 0% 50%;
+      opacity: 0.4;
+      box-shadow: 
+        0 0 20px rgba(168, 85, 247, 0.3),
+        0 0 40px rgba(168, 85, 247, 0.2);
+    }
+  }
+
+  /* 强化边框发光动画 */
+  @keyframes borderGlow {
+    0% {
+      border-color: rgba(168, 85, 247, 0.4);
+      box-shadow: 
+        0 0 20px rgba(168, 85, 247, 0.4),
+        inset 0 0 20px rgba(168, 85, 247, 0.4);
+    }
+    50% {
+      border-color: rgba(168, 85, 247, 1);
+      box-shadow: 
+        0 0 40px rgba(168, 85, 247, 0.8),
+        inset 0 0 40px rgba(168, 85, 247, 0.8);
+    }
+    100% {
+      border-color: rgba(168, 85, 247, 0.4);
+      box-shadow: 
+        0 0 20px rgba(168, 85, 247, 0.4),
+        inset 0 0 20px rgba(168, 85, 247, 0.4);
+    }
+  }
+
+  .pricing-card-hover {
+    position: relative;
+    isolation: isolate;
+    border: 2px solid transparent;
+    transition: all 0.5s ease;
+  }
+
+  .pricing-card-hover::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    background: linear-gradient(
+      45deg,
+      rgba(168, 85, 247, 0.8),    /* purple-500 */
+      rgba(236, 72, 153, 0.8),     /* pink-500 */
+      rgba(168, 85, 247, 0.8)      /* purple-500 */
+    );
+    border-radius: inherit;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.8s ease-out; /* 增加透明度过渡时间 */
+    background-size: 200% 200%;
+    filter: blur(8px);
+  }
+
+  .pricing-card-hover:hover {
+    transform: translateY(-5px) scale(1.02);
+  }
+
+  .pricing-card-hover:hover::before {
+    opacity: 1;
+    animation: neonFlow 2s infinite;
+  }
+
+  /* 修改 after 伪元素的过渡效果 */
+  .pricing-card-hover::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    background: linear-gradient(
+      45deg,
+      rgba(168, 85, 247, 1),
+      rgba(236, 72, 153, 1)
+    );
+    border-radius: inherit;
+    z-index: -2;
+    opacity: 0;
+    transition: all 0.8s ease-out; /* 增加过渡时间 */
+    filter: blur(15px);
+  }
+
+  .pricing-card-hover:hover::after {
+    opacity: 0.5;
+    animation: pulseWithFade 3s infinite;
+  }
+
+  /* 新增带渐隐效果的脉冲动画 */
+  @keyframes pulseWithFade {
+    0% {
+      transform: scale(1);
+      opacity: 0;
+    }
+    50% {
+      transform: scale(1.1);
+      opacity: 0.3;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 0;
+    }
+  }
+}
