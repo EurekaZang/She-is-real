@@ -12,18 +12,20 @@ export function ChatWindow({ messages, isLoading }: ChatWindowProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // 确保新消息出现时自动滚动到底部
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
   
   return (
-    <div className="flex-1 p-6 overflow-y-auto relative">
-      {/* 添加霓虠灯效果 */}
+    <div className="flex-1 overflow-y-auto relative neon-scrollbar">
+      {/* 霓虹灯效果 */}
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute right-1/4 top-1/3 w-64 h-64 bg-purple-600/20 rounded-full blur-[96px] animate-pulse"></div>
         <div className="absolute left-1/3 bottom-1/4 w-64 h-64 bg-blue-600/20 rounded-full blur-[96px] animate-pulse animation-delay-2000"></div>
       </div>
 
-      <div className="space-y-4 relative z-10">
+      {/* 消息内容区域 */}
+      <div className="space-y-4 p-6 relative z-10">
         {messages.map((msg, index) => (
           <ChatMessage key={index} message={msg} />
         ))}

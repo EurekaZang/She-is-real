@@ -13,11 +13,8 @@ interface PersonaSelectorProps {
 
 export function PersonaSelector({ personas, selectedPersona, onSelectPersona }: PersonaSelectorProps) {
   return (
-    <div className="w-full h-full backdrop-blur-xl bg-black/30 p-4 border-r border-white/10 relative">
-      <div className="absolute -inset-2 z-0 opacity-50 pointer-events-none">
-        <div className="absolute top-1/3 left-1/2 w-48 h-48 bg-purple-600/30 rounded-full blur-[64px] animate-pulse"></div>
-        <div className="absolute bottom-1/3 left-1/4 w-32 h-32 bg-blue-600/30 rounded-full blur-[48px] animate-pulse animation-delay-1000"></div>
-      </div>
+    <div className="w-full h-full backdrop-blur-xl bg-black/30 p-4 relative overflow-y-auto neon-scrollbar">
+      {/* ...霓虹灯效果... */}
 
       <div className="relative z-10">
         <h2 className="text-xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
@@ -43,7 +40,7 @@ export function PersonaSelector({ personas, selectedPersona, onSelectPersona }: 
                     height={48}
                     className="w-12 h-12 rounded-full object-cover flex-shrink-0"
                   />
-                  <div className="flex-1 min-w-0">
+                  <div className="flex-1 min-w-0"> {/* 这里确保文本容器可以收缩 */}
                     <p className="font-medium text-white truncate">
                       {persona.name}
                     </p>

@@ -90,13 +90,15 @@ export default function HomePage() {
 
       {/* 主界面内容 */}
       <div className="relative flex h-screen">
-        {/* PersonaSelector with glass effect */}
-        <div className="w-1/4 min-w-[280px] backdrop-blur-xl bg-white/5 border-r border-white/10 relative">
-          <PersonaSelector
-            personas={personas}
-            selectedPersona={selectedPersona}
-            onSelectPersona={handleSelectPersona}
-          />
+        {/* 左侧 PersonaSelector - 修改溢出处理 */}
+        <div className="w-1/4 min-w-[280px] max-w-[420px] backdrop-blur-xl bg-white/5 border-r border-white/10 relative overflow-hidden">
+          <div className="h-full pb-20"> {/* 保持底部 padding */}
+            <PersonaSelector
+              personas={personas}
+              selectedPersona={selectedPersona}
+              onSelectPersona={handleSelectPersona}
+            />
+          </div>
           
           {/* Dashboard 按钮 */}
           <Link 
@@ -131,18 +133,18 @@ export default function HomePage() {
           </Link>
         </div>
 
-        {/* Chat area with glass effect */}
-        <div className="flex-1 flex flex-col bg-black/30 backdrop-blur-xl">
+        {/* 右侧聊天区域保持不变 */}
+        <div className="flex-1 flex flex-col h-screen overflow-hidden bg-black/30 backdrop-blur-xl">
           {selectedPersona ? (
             <>
-              <header className="p-4 border-b border-white/10 backdrop-blur-md bg-white/5">
+              <header className="flex-shrink-0 p-4 border-b border-white/10 backdrop-blur-md bg-white/5">
                 <h1 className="text-xl font-bold text-white">
                   与 {selectedPersona.name} 对话
                 </h1>
               </header>
-              <div className="flex-1 flex flex-col">
+              <div className="flex-1 flex flex-col min-h-0"> {/* 添加 min-h-0 确保 flex-1 正常工作 */}
                 <ChatWindow messages={messages} isLoading={isLoading} />
-                <div className="border-t border-white/10">
+                <div className="flex-shrink-0 border-t border-white/10">
                   <ChatInput onSendMessage={handleSendMessage} isLoading={isLoading} />
                 </div>
               </div>
