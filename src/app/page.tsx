@@ -1,20 +1,25 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { getMessagesMap, setMessagesMap } from '@/utils/chatStorage';
 import { PersonaSelector } from '@/components/PersonaSelector';
 import { ChatWindow } from '@/components/ChatWindow';
 import { ChatInput } from '@/components/ChatInput';
 import { Persona, ChatMessage } from '@/app/types';
 import Link from 'next/link';
 import { ModelDisplay } from '@/components/ModelDisplay';
+import { useRouter } from 'next/navigation';
 
 export default function HomePage() {
   // --- 状态管理 ---
   const [personas, setPersonas] = useState<Persona[]>([]);
   const [selectedPersona, setSelectedPersona] = useState<Persona | null>(null);
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  // 移除 messages 状态，全部用 messagesMap
+  const [messagesMap, setMessagesMapState] = useState<Record<string, ChatMessage[]>>({});
   const [isLoading, setIsLoading] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true); // 添加边栏状态
+
+  const router = useRouter();
 
   // --- 数据获取 ---
   // 组件加载时，获取所有可用的人格
@@ -29,52 +34,77 @@ export default function HomePage() {
       }
     }
     fetchPersonas();
+    // 聊天记录初始化
+    if (typeof window !== 'undefined') {
+      setMessagesMapState(getMessagesMap());
+    }
   }, []);
 
   // --- 核心交互逻辑 ---
   const handleSendMessage = async (userInput: string) => {
     if (!selectedPersona) return;
-
-    // 1. 立即在UI上显示用户的消息 (乐观更新)
+    const personaId = String(selectedPersona.id);
     const userMessage: ChatMessage = { role: 'user', content: userInput };
-    setMessages(prevMessages => [...prevMessages, userMessage]);
+
+    setMessagesMapState(prev => {
+      const prevMsgs = prev[personaId] || [];
+      const newMap = { ...prev, [personaId]: [...prevMsgs, userMessage] };
+      setMessagesMap(newMap);
+      return newMap;
+    });
     setIsLoading(true);
 
     try {
-      // 2. 调用我们的 Mock API
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           message: userInput,
-          persona_id: selectedPersona.id,
+          persona_id: personaId,
         }),
       });
 
-      if (!response.ok) {
-        throw new Error('API request failed');
-      }
-
+      if (!response.ok) throw new Error('API request failed');
       const aiResponse: ChatMessage = await response.json();
 
-
-      setMessages(prevMessages => [...prevMessages, aiResponse]);
-
+      setMessagesMapState(prev => {
+        const prevMsgs = prev[personaId] || [];
+        const newMap = { ...prev, [personaId]: [...prevMsgs, aiResponse] };
+        setMessagesMap(newMap);
+        return newMap;
+      });
     } catch (error) {
-      console.error("Failed to send message:", error);
       const errorMessage: ChatMessage = { role: 'assistant', content: '抱歉，我好像出了一点问题...' };
-      setMessages(prevMessages => [...prevMessages, errorMessage]);
+      setMessagesMapState(prev => {
+        const prevMsgs = prev[personaId] || [];
+        const newMap = { ...prev, [personaId]: [...prevMsgs, errorMessage] };
+        setMessagesMap(newMap);
+        return newMap;
+      });
     } finally {
-
       setIsLoading(false);
     }
   };
 
   const handleSelectPersona = (persona: Persona) => {
     setSelectedPersona(persona);
-    // 切换人格时，清空聊天记录
-    setMessages([]);
+    // 切换 persona 时同步最新聊天记录
+    if (typeof window !== 'undefined') {
+      setMessagesMapState(getMessagesMap());
+    }
+    // 不要在这里 router.push
   }
+
+  // 在隐藏侧栏的按钮 onClick 里加跳转逻辑
+  const handleSidebarToggle = () => {
+    setIsSidebarOpen((open) => {
+      if (open && selectedPersona) {
+        // 即将隐藏侧栏且已选中 persona，跳转
+        router.push(`/chat/persona/${selectedPersona.id}`);
+      }
+      return !open;
+    });
+  };
 
   // --- 渲染UI ---
   return (
@@ -145,7 +175,7 @@ export default function HomePage() {
 
         {/* 显示/隐藏按钮 - 居中显示，稍微留一点距离 */}
         <button
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          onClick={handleSidebarToggle}
           className={`
             fixed z-30
             left-0 right-auto
@@ -225,7 +255,7 @@ export default function HomePage() {
                   >
                     {/* 聊天窗口容器 - 保持滚动功能 */}
                     <div className="flex-1 min-h-0 overflow-y-auto neon-scrollbar">
-                      <ChatWindow messages={messages} isLoading={isLoading} />
+                      <ChatWindow messages={messagesMap[String(selectedPersona.id)] || []} isLoading={isLoading} />
                     </div>
                   </div>
 

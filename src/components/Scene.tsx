@@ -18,7 +18,7 @@ const MODEL_CONFIG: Record<string, {
 }> = {
   Lapwing: {
     glb: '/lapwing.glb',
-    camera: { position: [10, 50, 20], fov: 45 },
+    camera: { position: [10, 70, 20], fov: 45 },
     modelPosition: [0, -30, 0],
     orbitTarget: [0, 20, 0],
   },
@@ -29,7 +29,7 @@ const MODEL_CONFIG: Record<string, {
     orbitTarget: [0, 0, 0],
   },
   Momoi: {
-    glb: '/momoi1k.glb',
+    glb: '/momoi.glb',
     camera: { position: [0, 0.1, 0.1], fov: 45 },
     modelPosition: [0, -0.06, 0],
     orbitTarget: [0, 0, 0],

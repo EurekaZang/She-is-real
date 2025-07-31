@@ -33,7 +33,6 @@ export async function GET(
   request: Request,
   { params }: { params: { id: string } }
 ) {
-  // 等待 params 解析完成
   const id = params.id;
   const personaId = parseInt(id, 10);
 
