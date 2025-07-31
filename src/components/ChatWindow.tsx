@@ -12,12 +12,11 @@ export function ChatWindow({ messages, isLoading }: ChatWindowProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // 确保新消息出现时自动滚动到底部
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
   
   return (
-    <div className="flex-1 overflow-y-auto relative neon-scrollbar">
+    <div className="flex-1 relative neon-scrollbar">
       {/* 霓虹灯效果 */}
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute right-1/4 top-1/3 w-64 h-64 bg-purple-600/20 rounded-full blur-[96px] animate-pulse"></div>

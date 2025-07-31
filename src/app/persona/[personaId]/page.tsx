@@ -6,6 +6,7 @@ import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Persona } from '@/app/types';
+import ReactMarkdown from 'react-markdown';
 
 // 扩展 Persona 类型以包含详情
 type PersonaDetails = Persona & {
@@ -30,6 +31,10 @@ function PersonaDetailSkeleton() {
             </div>
         </div>
     );
+}
+
+function PersonaBio({ bio }: { bio: string }) {
+  return <ReactMarkdown>{bio}</ReactMarkdown>;
 }
 
 
@@ -164,8 +169,10 @@ export default function PersonaProfilePage() {
                 {persona.name}
               </h1>
               <p className="text-xl text-gray-400 mb-6">{persona.description}</p>
-              
-              <p className="text-lg leading-relaxed mb-8 text-white/80">{persona.bio}</p>
+
+              <div className="text-lg leading-relaxed mb-8 text-white/80">
+                <PersonaBio bio={persona.bio} />
+              </div>
 
               <div className="backdrop-blur-md bg-white/5 rounded-xl p-6 mb-8 border border-white/10">
                 <h3 className="text-lg font-semibold mb-4 text-white">详细信息</h3>

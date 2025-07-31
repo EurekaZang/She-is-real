@@ -6,9 +6,9 @@ import { Persona } from '@/app/types';
 const MOCK_PERSONAS: Persona[] = [
   { 
     id: 1, 
-    name: '资深程序员', 
-    description: '一位乐于助人的代码导师', 
-    avatar: '/avatars/lecun.jpg'
+    name: 'Lapwing', 
+    description: '你的赛博亡妻', 
+    avatar: '/avatars/lapwing.jpg'
   },
   { 
     id: 2, 

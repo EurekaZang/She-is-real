@@ -6,6 +6,7 @@ import { ChatWindow } from '@/components/ChatWindow';
 import { ChatInput } from '@/components/ChatInput';
 import { Persona, ChatMessage } from '@/app/types';
 import Link from 'next/link';
+import { ModelDisplay } from '@/components/ModelDisplay';
 
 export default function HomePage() {
   // --- 状态管理 ---
@@ -194,6 +195,7 @@ export default function HomePage() {
             transition-all duration-300 ease-in-out
             ${isSidebarOpen ? 'left-[320px]' : 'left-0'}
           `}
+          style={{ height: '100vh' }} // 强制高度为视口高度
         >
           {selectedPersona ? (
             <>
@@ -206,9 +208,50 @@ export default function HomePage() {
               
               {/* Chat Content */}
               <div className="flex-1 flex flex-col min-h-0">
-                <div className="flex-1 min-h-0">
-                  <ChatWindow messages={messages} isLoading={isLoading} />
+                {/* 主内容区域 - 水平布局 */}
+                <div className={`
+                  flex-1 min-h-0 flex
+                  transition-all duration-500 ease-in-out
+                `}>
+                  {/* 聊天区域 */}
+                  <div
+                    className={`
+                      transition-all duration-500 ease-in-out
+                      ${!isSidebarOpen 
+                        ? 'w-2/5 min-w-[240px] max-w-[420px]' 
+                        : 'w-full'}
+                      flex flex-col
+                    `}
+                  >
+                    {/* 聊天窗口容器 - 保持滚动功能 */}
+                    <div className="flex-1 min-h-0 overflow-y-auto neon-scrollbar">
+                      <ChatWindow messages={messages} isLoading={isLoading} />
+                    </div>
+                  </div>
+
+                  {/* 3D 模型区域 - 仅在全屏模式显示 */}
+                  {!isSidebarOpen && (
+                    <div className="w-5/5 h-full relative flex items-center justify-center overflow-hidden">
+                      <div
+                        className={`
+                          w-full h-full
+                          transition-all duration-700 ease-out
+                          ${!isSidebarOpen 
+                            ? 'translate-y-0 opacity-100' 
+                            : 'translate-y-full opacity-0'}
+                        `}
+                        style={{
+                          // 确保动画从下方滑入
+                          transform: !isSidebarOpen ? 'translateY(0)' : 'translateY(100%)',
+                        }}
+                      >
+                        <ModelDisplay />
+                      </div>
+                    </div>
+                  )}
                 </div>
+
+                {/* 输入框 - 始终在底部 */}
                 <div className="flex-shrink-0 border-t border-white/10">
                   <ChatInput onSendMessage={handleSendMessage} isLoading={isLoading} />
                 </div>
