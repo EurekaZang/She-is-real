@@ -12,13 +12,13 @@ const MOCK_PERSONAS: Persona[] = [
   },
   { 
     id: 2, 
-    name: '苏格拉底', 
-    description: '一位善于提问的哲学家', 
-    avatar: '/avatars/sgld.jpg'
+    name: 'Nia', 
+    description: '一个可爱的欧美混血女孩', 
+    avatar: '/avatars/nia.jpg'
   },
   { 
     id: 3, 
-    name: '莎士比亚', 
+    name: 'Momoi', 
     description: '一位文采斐然的剧作家', 
     avatar: '/avatars/ssby.jpg'
   }

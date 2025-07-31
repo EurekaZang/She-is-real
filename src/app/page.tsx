@@ -241,11 +241,11 @@ export default function HomePage() {
                             : 'translate-y-full opacity-0'}
                         `}
                         style={{
-                          // 确保动画从下方滑入
                           transform: !isSidebarOpen ? 'translateY(0)' : 'translateY(100%)',
                         }}
                       >
-                        <ModelDisplay />
+                        {/* 传递当前 persona 给 ModelDisplay */}
+                        <ModelDisplay persona={selectedPersona} />
                       </div>
                     </div>
                   )}

@@ -1,75 +1,87 @@
 'use client';
 
 import { Canvas, useFrame } from '@react-three/fiber';
-import { 
-  OrbitControls, 
-  useGLTF, 
-  Stage,
-  ContactShadows 
-} from '@react-three/drei';
+import { OrbitControls, useGLTF, ContactShadows } from '@react-three/drei';
 import { Suspense, useEffect, useRef } from 'react';
 import * as THREE from 'three';
+import { Persona } from '@/app/types';
 
-type ModelProps = {
-  position?: [number, number, number];
-  animationName?: string; // 动画名称
+type SceneProps = {
+  persona: Persona;
 };
 
-function Model({ position = [0, 0, 0], animationName }: ModelProps) {
-  const { scene, animations } = useGLTF('/lapwing.glb');
+const MODEL_CONFIG: Record<string, {
+  glb: string;
+  camera: { position: [number, number, number]; fov: number };
+  modelPosition: [number, number, number];
+  orbitTarget: [number, number, number];
+}> = {
+  Lapwing: {
+    glb: '/lapwing.glb',
+    camera: { position: [10, 50, 20], fov: 45 },
+    modelPosition: [0, -30, 0],
+    orbitTarget: [0, 20, 0],
+  },
+  Nia: {
+    glb: '/nia.glb',
+    camera: { position: [0, 0.1, 0.1], fov: 45 },
+    modelPosition: [0, -0.06, 0],
+    orbitTarget: [0, 0, 0],
+  },
+  Momoi: {
+    glb: '/momoi1k.glb',
+    camera: { position: [0, 0.1, 0.1], fov: 45 },
+    modelPosition: [0, -0.06, 0],
+    orbitTarget: [0, 0, 0],
+  },
+};
+
+function Model({ url, position }: { url: string; position: [number, number, number] }) {
+  const { scene, animations } = useGLTF(url);
   const mixer = useRef<THREE.AnimationMixer | null>(null);
 
   useEffect(() => {
-    if (animations.length > 0) {
+    if (animations && animations.length > 0) {
       mixer.current = new THREE.AnimationMixer(scene);
-
-      // 查找并播放指定动画
-      const action = animations.find((clip) => clip.name === animationName);
-      if (action) {
-        const animationAction = mixer.current.clipAction(action);
-        animationAction.reset().play();
-      }
+      const action = mixer.current.clipAction(animations[0]);
+      action.reset().play();
+      return () => {
+        mixer.current?.stopAllAction();
+      };
     }
+  }, [scene, animations]);
 
-    return () => mixer.current?.stopAllAction(); // 清理动画
-  }, [scene, animations, animationName]);
-
-  useFrame((state, delta) => {
-    if (mixer.current) {
-      mixer.current.update(delta); // 更新动画
-    }
+  useFrame((_, delta) => {
+    mixer.current?.update(delta);
   });
 
   return <primitive object={scene} position={position} />;
 }
 
-export default function Scene() {
+export default function Scene({ persona }: SceneProps) {
+  const config = MODEL_CONFIG[persona?.name || 'Lapwing'] || MODEL_CONFIG.Lapwing;
+
   return (
     <Canvas
-      camera={{ position: [10, 50, 20], fov: 45 }}
+      camera={config.camera}
       style={{ width: '100%', height: '100%' }}
       gl={{ alpha: true }}
     >
+      {/* 手动添加光源 */}
+      <ambientLight intensity={0.7} />
+      <directionalLight position={[10, 20, 10]} intensity={3.0} castShadow />
       <Suspense fallback={null}>
-        <Stage
-          environment="city"
-          intensity={0.5}
-          adjustCamera={false}
-        >
-          <Model position={[0, -30, 0]} animationName="Idle" /> {/* 指定动画名称 */}
-        </Stage>
-        
+        <Model url={config.glb} position={config.modelPosition} />
         <ContactShadows
-          position={[0, -30, 0]}
+          position={config.modelPosition}
           opacity={0.4}
           scale={10}
           blur={2}
           far={4}
         />
       </Suspense>
-
       <OrbitControls
-        target={[0, 20, 0]} // 对准模型头部
+        target={config.orbitTarget}
         enableZoom={true}
         makeDefault
         minPolarAngle={Math.PI / 2.5}

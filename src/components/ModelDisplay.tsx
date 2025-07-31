@@ -2,8 +2,8 @@
 
 import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
+import { Persona } from '@/app/types';
 
-// 动态导入 Three.js 相关组件
 const Scene = dynamic(() => import('./Scene'), {
   ssr: false,
   loading: () => (
@@ -20,11 +20,12 @@ const Scene = dynamic(() => import('./Scene'), {
   )
 });
 
-export function ModelDisplay() {
+export function ModelDisplay({ persona }: { persona: Persona | null }) {
+  if (!persona) return null;
   return (
     <div className="w-full h-full">
       <Suspense fallback={null}>
-        <Scene />
+        <Scene persona={persona} />
       </Suspense>
     </div>
   );
